@@ -13,22 +13,31 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       max_length: 50,
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    github: {
-      type: String,
-      required: true,
-      max_length: 50,
-    },
-    thoughts: [thoughtSchema],
-    friends: [userSchema]
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'thought',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    ]
   },
   {
     toJSON: {
-      getters: true,
+      virtuals: true
     },
   }
 );
 
-const Student = model('student', userSchema);
+userSchema.virtual('numFriends').get(function() {
+  return this.friends.length;
+})
+const User = model('user', userSchema);
 
-module.exports = Student;
+module.exports = User;
