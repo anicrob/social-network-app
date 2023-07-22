@@ -31,9 +31,9 @@ const thoughtSchema = new Schema(
   }
 );
 
-function formatDate() {
-  
-}
+// function formatDate() {
+
+// }
 
 thoughtSchema.virtual('reactionCount').get(function() {
   return this.reactions.length;
