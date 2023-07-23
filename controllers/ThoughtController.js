@@ -90,7 +90,7 @@ module.exports = {
         );
 
         if (!updateThought) {
-          return res.status(404).json({ message: 'No thought with this idwas found!' });
+          return res.status(404).json({ message: 'No thought with this reaction found!' });
         }
   
         res.json(updateThought);
@@ -107,7 +107,7 @@ module.exports = {
       );
 
       if (!updatedThought) {
-        return res.status(404).json({ message: 'No application with this id!' });
+        return res.status(404).json({ message: 'No thought with this id!' });
       }
 
       res.json(updatedThought);
