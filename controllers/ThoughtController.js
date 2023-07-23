@@ -30,7 +30,7 @@ module.exports = {
       const createdThought = await Thought.create(req.body);
 
       const updateUser = await User.findOneAndUpdate(
-        { _id: createdThought.username },
+        { _id: req.body.userId },
         { $addToSet: { thoughts: createdThought._id } }
       );
       if (!updateUser) {
@@ -52,7 +52,7 @@ module.exports = {
       );
 
       if (!course) {
-        res.status(404).json({ message: "No course with this id!" });
+        res.status(404).json({ message: "No thought with this id!" });
       }
 
       res.json(course);

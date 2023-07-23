@@ -11,22 +11,23 @@ const reactionSchema = new Schema(
       required: true,
       maxlength: 280,
     },
-    username: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-      },
-  ],
+    username: {
+      type: String,
+      required: true,
+    },
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: new Date(),
+      get: (date) => {
+        return date.toLocaleString()
+      },
     },
   },
   {
     toJSON: {
       getters: true,
     },
-    id: true,
+    id: false,
   }
 );
 

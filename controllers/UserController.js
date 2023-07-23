@@ -22,11 +22,6 @@ module.exports = {
         .select("-__v")
         .populate({
           path: "thoughts",
-          Model: Thought,
-          populate: {
-            path: "reactions",
-            model: Reaction,
-          },
         });
 
       if (!user) {
@@ -53,7 +48,7 @@ module.exports = {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $set: req.body },
+        req.body,
         { new: true }
       );
 
@@ -78,9 +73,9 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ message: "No such user exists" });
       }
-
+      
       const deletedThoughts = await Thought.deleteMany({
-        username: req.params.userId,
+        _id: { $in: user.thoughts },
       });
 
       if (!deletedThoughts) {
