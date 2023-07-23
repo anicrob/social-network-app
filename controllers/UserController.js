@@ -5,7 +5,7 @@ module.exports = {
   // Get all students
   async getUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find({});
 
       res.json(users);
     } catch (err) {
@@ -21,16 +21,16 @@ module.exports = {
       })
         .select("-__v")
         .populate({
-          path: "thought",
+          path: "thoughts",
           Model: Thought,
           populate: {
-            path: "reaction",
+            path: "reactions",
             model: Reaction,
           },
         });
 
-      if (!student) {
-        return res.status(404).json({ message: "No student with that ID" });
+      if (!user) {
+        return res.status(404).json({ message: "No user with that ID" });
       }
 
       res.json(user);
@@ -42,8 +42,8 @@ module.exports = {
   // create a new student
   async createUser(req, res) {
     try {
-      const student = await User.create(req.body);
-      res.json(student);
+      const user = await User.create(req.body);
+      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -79,7 +79,7 @@ module.exports = {
         return res.status(404).json({ message: "No such user exists" });
       }
 
-      const deletedThoughts = await Thought.findAndRemove({
+      const deletedThoughts = await Thought.deleteMany({
         username: req.params.userId,
       });
 
