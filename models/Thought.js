@@ -15,6 +15,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: new Date(),
       //getter for the date formatting
+      //formats only on query not in db
       get: (date) => {
         return date.toLocaleString()
       },
