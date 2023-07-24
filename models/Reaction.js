@@ -3,7 +3,9 @@ const { Schema, Types } = require('mongoose');
 const reactionSchema = new Schema(
   {
     reactionId: {
+      //Mongoose's ObjectId data type
       type: Schema.Types.ObjectId,
+      //Default value is set to a new ObjectId
       default: () => new Types.ObjectId(),
     },
     reactionBody: {
@@ -18,12 +20,14 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: new Date(),
+      //getter to format date
       get: (date) => {
         return date.toLocaleString()
       },
     },
   },
   {
+    //getters property set to true
     toJSON: {
       getters: true,
     },

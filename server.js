@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 
+//once the db is open, start listening
 db.once('open', () => {
   app.listen(PORT, () => {
     console.log(`API server for Social Network App running on port ${PORT}!`);

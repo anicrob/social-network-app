@@ -2,7 +2,7 @@ const { ObjectId } = require("mongoose").Types;
 const { User, Thought, Reaction } = require("../models");
 
 module.exports = {
-  // Get all students
+  // Get all users
   async getUsers(req, res) {
     try {
       const users = await User.find({});
@@ -13,7 +13,7 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // Get a single student
+  // Get a single user
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({
@@ -34,7 +34,7 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // create a new student
+  // create a new user
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
@@ -44,11 +44,12 @@ module.exports = {
     }
   },
 
+  //update user
   async updateUser(req, res) {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        req.body,
+        { $set: req.body },
         { new: true }
       );
 
@@ -63,7 +64,7 @@ module.exports = {
     }
   },
 
-  // Delete a student and their associated thoughts
+  // Delete a user and their associated thoughts
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndRemove({
@@ -73,8 +74,10 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ message: "No such user exists" });
       }
-      
+      //delete the thoughts associated with the deleted user
       const deletedThoughts = await Thought.deleteMany({
+        //delete the thoughts where the thought _id is found in the user.thoughts 
+        //property/array (where user is the user just deleted)
         _id: { $in: user.thoughts },
       });
 
@@ -93,12 +96,10 @@ module.exports = {
 
   // Add a friend to a user
   async addFriend(req, res) {
-    console.log("You are adding a friend");
-    console.log(req.body);
-
     try {
       const addFriend = await User.findOneAndUpdate(
         { _id: req.params.userId },
+        //$addToSet: add the friendId in params to the friends array on User model w/o duplicates
         { $addToSet: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );
@@ -119,6 +120,7 @@ module.exports = {
     try {
       const removeFriend = await User.findOneAndUpdate(
         { _id: req.params.userId },
+        //$pull: remove the friendId in params from the friends array on User model
         { $pull: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );

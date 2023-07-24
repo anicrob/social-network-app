@@ -13,14 +13,17 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       max_length: 50,
+      //validation for email
       match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
+    //reference the thought model
     thoughts: [
       {
         type: Schema.Types.ObjectId,
         ref: 'thought',
       },
     ],
+    //reference the user model (self-reference)
     friends: [
       {
         type: Schema.Types.ObjectId,
@@ -30,15 +33,18 @@ const userSchema = new Schema(
   },
   {
     id:false,
+    //virtuals property set to true
     toJSON: {
       virtuals: true
     },
   }
 );
 
+//virtual for the number of friends
 userSchema.virtual('numFriends').get(function() {
   return this.friends.length;
 })
+
 const User = model('user', userSchema);
 
 module.exports = User;

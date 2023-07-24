@@ -31,6 +31,7 @@ module.exports = {
 
       const updateUser = await User.findOneAndUpdate(
         { _id: req.body.userId },
+        //add the created thought's id to the User thought array
         { $addToSet: { thoughts: createdThought._id } }
       );
       if (!updateUser) {
@@ -45,17 +46,17 @@ module.exports = {
   // Update a thought
   async updateThought(req, res) {
     try {
-      const course = await Thought.findOneAndUpdate(
+      const updatedThought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $set: req.body },
         { runValidators: true, new: true }
       );
 
-      if (!course) {
+      if (!updatedThought) {
         res.status(404).json({ message: "No thought with this id!" });
       }
 
-      res.json(course);
+      res.json(updatedThought);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -68,11 +69,12 @@ module.exports = {
       });
 
       if (!deletedThought) {
-        res.status(404).json({ message: "No course with that ID" });
+        return res.status(404).json({ message: "No thought with that ID" });
       }
 
       await User.findOneAndUpdate(
         { thoughts: req.params.thoughtId },
+        //$pull: remove the thought mentioned in the params from the User thoughts array
         { $pull: { thoughts: req.params.thoughtId } },
         { new: true }
       );
@@ -81,10 +83,13 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //add reaction
   async addReaction (req,res) {
     try{
       const updateThought = await Thought.findOneAndUpdate(
         {_id: req.params.thoughtId},
+        //$push: add the reaction mentioned in params, from the reactions array in the thought
+        //since using push instead of addToSet, this (push) will allow duplicate values
         {$push: {reactions: req.body}},
         { runValidators: true, new: true }
         );
@@ -98,10 +103,12 @@ module.exports = {
         res.status(500).json(err);
       }
   },
+  //remove reaction
   async removeReaction(req, res) {
     try {
       const updatedThought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
+        //$pull: remove the reaction mentioned in params, from the reactions array in the thought
         { $pull: { reactions: { reactionId: req.params.reactionId } } },
         { runValidators: true, new: true }
       );
