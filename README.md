@@ -37,7 +37,9 @@ Code created by anicrob with minor assistance (architecure) from UNC tutor.
 
 Repo: https://github.com/anicrob/social-network-app
 
-Video: 
+Video: https://github.com/anicrob/social-network-app/assets/127058697/522de624-f5e5-46a4-a2d6-e7ad6d7e8322
+
+
 
 
 
