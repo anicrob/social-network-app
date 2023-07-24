@@ -31,8 +31,5 @@ const reactionSchema = new Schema(
   }
 );
 
-// function formatDate() {
-
-// }
 
 module.exports = reactionSchema;
